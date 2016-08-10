@@ -1,0 +1,39 @@
+{
+  "name": "vega-dataflow-examples",
+  "version": "1.0.0",
+  "description": "Example applications driven by Vega dataflows.",
+  "keywords": [
+    "vega",
+    "dataflow",
+    "examples"
+  ],
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Jeffrey Heer",
+    "url": "http://idl.cs.washington.edu"
+  },
+  "main": "build/vega-dataflow-examples.js",
+  "jsnext:main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uwdata/vega-dataflow-examples.git"
+  },
+  "scripts": {
+    "build": "rm -rf build && mkdir build && bin/rollup"
+  },
+  "dependencies": {
+    "vega-crossfilter": "1",
+    "vega-dataflow": "2",
+    "vega-encode": "1",
+    "vega-force": "1",
+    "vega-hierarchy": "1",
+    "vega-geo": "1",
+    "vega-voronoi": "1",
+    "vega-statistics": "1",
+    "vega-util": "1"
+  },
+  "devDependencies": {
+    "rollup": "0.34",
+    "rollup-plugin-node-resolve": "1"
+  }
+}
