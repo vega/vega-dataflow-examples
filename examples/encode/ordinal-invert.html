@@ -73,10 +73,10 @@ function updateBrush(_) {
   brush.setAttribute('x', Math.min(_.x[0], _.x[1]));
   brush.setAttribute('width', Math.abs(_.x[1] - _.x[0]));
 
-  if (os.value && os.value.invertExtent) {
+  if (os.value && os.value.invertRange) {
     output.innerText = 'INVERT: '
       + _.x[0].toFixed(0) + ',' + _.x[1].toFixed(0) + ' -> '
-      + (os.value.invertExtent(_.x[0], _.x[1]) || '\u2205');
+      + (os.value.invertRange(_.x) || '\u2205');
   }
 }
 
