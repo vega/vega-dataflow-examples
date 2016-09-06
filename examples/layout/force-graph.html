@@ -65,11 +65,6 @@ var links = {
   }
 };
 
-
-var index = vega.field('index'),
-    source = vega.field('source'),
-    target = vega.field('target');
-
 var df = new vega.Dataflow(),
     ac = df.add(null).modified(true),
     cx = df.add(400),
@@ -80,21 +75,23 @@ var df = new vega.Dataflow(),
     nr = df.add(+document.querySelector('#nr').value),
     st = df.add(+document.querySelector('#st').value),
     si = df.add(+document.querySelector('#si').value),
+    rs = df.add(false),
     sc = df.add(tx.Scale, {type:'ordinal', scheme:'category20c'}),
 
     nc = df.add(tx.Collect), // nodes
     lc = df.add(tx.Collect), // links
+    ls = df.add(tx.Sieve, {pulse: lc}), // link values
 
     fs = df.add(tx.Force, {
       forces: [
         df.add(tx.Params, {force:'center', x:cx, y:cy}),
         df.add(tx.Params, {force:'collide', radius:nr}),
         df.add(tx.Params, {force:'nbody', strength:st}),
-        df.add(tx.Params, {force:'link', links:lc, distance:ld})
+        df.add(tx.Params, {force:'link', links:ls, distance:ld})
       ],
       iterations: si,
+      restart: rs,
       static: sl,
-      fixed: ac,
       pulse: nc
     }),
     j1 = df.add(tx.DataJoin, {item:items(gn, 'circle'), pulse:fs}),
@@ -102,8 +99,7 @@ var df = new vega.Dataflow(),
     e1 = df.add(tx.Encode, {encoders:nodes, sc:sc, pulse:c1}),
     s1 = df.add(tx.Sieve, {pulse: e1})
 
-    rf = df.add(tx.Reflow, {force:s1, pulse:lc}),
-    lp = df.add(tx.LinkPath, {shape:sh, pulse:rf}),
+    lp = df.add(tx.LinkPath, {shape:sh, pulse:lc}),
     j2 = df.add(tx.DataJoin, {item:items(gl, 'path'), pulse:lp}),
     c2 = df.add(tx.Collect, {pulse:j2}),
     e2 = df.add(tx.Encode, {encoders:links, sc:sc, pulse:c2}),
@@ -113,11 +109,25 @@ df.pulse(nc, vega.changeset().insert(miserables.nodes))
   .pulse(lc, vega.changeset().insert(miserables.links))
   .run();
 
-function xy(_, e) {
-  df.touch(ac);
+function fixed(_, e) {
   return vega.changeset()
-    .modify(ac.value, 'x', e.pageX - 10)
-    .modify(ac.value, 'y', e.pageY - 10);
+    .modify(ac.value, 'fx', e.pageX - 10)
+    .modify(ac.value, 'fy', e.pageY - 10);
+}
+
+function freeze(_, e) {
+  return vega.changeset()
+    .modify(ac.value, 'fx', ac.value.x)
+    .modify(ac.value, 'fy', ac.value.y);
+}
+
+function clear(_, e) {
+  var cs = vega.changeset();
+  if (ac.value) {
+    cs.modify(ac.value, 'fx', null)
+      .modify(ac.value, 'fy', null);
+  }
+  return cs;
 }
 
 var mf = function(e) { return !e.buttons; },
@@ -134,10 +144,15 @@ df.on(df.events('#ld', 'input'), ld, value)
   .on(df.events('#si', 'input'), si, value)
   .on(df.events('#sl', 'change'), sl, check)
   .on(df.events('#path', 'change'), sh, option)
+  .on(md, rs, true)  // enable force restart on mousedown
+  .on(mu, rs, false) // disable force restart on mouseup
   .on(mi, ac, datum) // set active node on non-drag mouseover
+  .on(mi, nc, freeze) // set fixed coords on mouseover
+  .on(mo, nc, clear) // clear fixed coords on non-drag mouseout
+  .on(mu, nc, clear) // clear fixed coords on mouseup
   .on(mo, ac, null)  // clear active node on non-drag mouseout
   .on(mu, ac, null)  // clear active node on mouseup
-  .on(drag, nc, xy);
+  .on(drag, nc, fixed); // set fixed coords on drag
     </script>
   </body>
 </html>
