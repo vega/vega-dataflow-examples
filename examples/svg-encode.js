@@ -1,5 +1,6 @@
 // TEST SUPPORT FOR VISUAL ENCODERS USING SVG
-// This should be superseded in the future by parser infrastructure.
+// This is only a partial implementation for test purposes.
+// Full encoder parsing can be found in the vega-parser module.
 
 function svgSetter(obj, key, value) {
   return obj + '.setAttribute("' + key + '",' + value + ');';
@@ -141,7 +142,6 @@ var parseEncoder = (function() {
     this.signals = UniqueList();
     this.scales = UniqueList();
     this.fields = UniqueList();
-    // this.data = UniqueList(Identity); // TODO: add data deps
   }
 
   var prototype = Dependencies.prototype;

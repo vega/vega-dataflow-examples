@@ -1,6 +1,6 @@
 {
   "name": "vega-dataflow-examples",
-  "version": "1.0.0",
+  "version": "1.0.0-beta",
   "description": "Example applications driven by Vega dataflows.",
   "keywords": [
     "vega",
@@ -16,19 +16,19 @@
   "jsnext:main": "index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/uwdata/vega-dataflow-examples.git"
+    "url": "https://github.com/vega/vega-dataflow-examples.git"
   },
   "scripts": {
     "build": "rm -rf build && mkdir build && bin/rollup"
   },
   "dependencies": {
-    "vega-crossfilter": "1",
-    "vega-dataflow": "2",
-    "vega-encode": "1",
-    "vega-force": "1",
-    "vega-hierarchy": "1",
-    "vega-geo": "1",
-    "vega-voronoi": "1",
+    "vega-crossfilter": ">=1.0.0-beta",
+    "vega-dataflow": ">=2.0.0-beta",
+    "vega-encode": ">=1.0.0-beta",
+    "vega-force": ">=1.0.0-beta",
+    "vega-hierarchy": ">=1.0.0-beta",
+    "vega-geo": ">=1.0.0-beta",
+    "vega-voronoi": ">=1.0.0-beta",
     "vega-statistics": "1",
     "vega-util": "1"
   },

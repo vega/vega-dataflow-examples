@@ -25,6 +25,7 @@
     <input id="ex" type="range" min="0.1" max="10" value="1" step="0.1"/> Pow Exponent<br/>
     <input id="tc" type="range" min="1" max="50" value="10"/> Tick Count<br/>
     <input id="tv" type="text" value="" placeholder="Tick Values (comma-separated)"/> Tick Values<br/>
+    <input id="ze" type="checkbox" /> <label for="ze">Include Zero</label><br/>
     <script type="text/javascript">
 var tx = vega.transforms;
 var svg = document.querySelector('svg.vis');
@@ -74,9 +75,10 @@ var df = new vega.Dataflow(),
     tv = df.add(null),
     tc = df.add(10),
     ex = df.add(1),
+    ze = df.add(false),
     fs = df.add(null),
     ff = df.add(null, null),
-    xs = df.add(tx.Scale, {type:st, domain:[d0,d1], range:xr, exponent:ex}),
+    xs = df.add(tx.Scale, {type:st, domain:[d0,d1], range:xr, exponent:ex, zero:ze}),
     at = df.add(tx.AxisTicks, {scale:xs, values:tv, count:tc, format:ff, formatSpecifier:fs}),
 
     j1 = df.add(tx.DataJoin, {item:items(svg, 'line'), pulse:at}),
@@ -90,6 +92,7 @@ var df = new vega.Dataflow(),
     s2 = df.add(tx.Sieve, {pulse: e2});
 
 df.on(df.events('#type', 'change'), st, option)
+  .on(df.events('#ze', 'change'), ze, check)
   .on(df.events('#d0', 'input'), d0, value)
   .on(df.events('#d1', 'input'), d1, value)
   .on(df.events('#ex', 'input'), ex, value)
